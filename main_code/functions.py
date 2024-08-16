@@ -55,3 +55,56 @@ def orders_per_customer():
         results = cursor.fetchall()
         for row in results:
             print(f"Customer: {row[0]} {row[1]}, Number of orders: {row[2]}")
+
+# Funtion to show average order check
+def average_order_check():
+    with sqlite3.connect('store.db') as cucu:
+        cursor = cucu.cursor()
+        cursor.execute('''
+            SELECT AVG(products.price * orders.quantity) AS average_check
+            FROM orders
+            INNER JOIN products ON orders.product_id = products.product_id;
+        ''')
+        avg_check = cursor.fetchone()[0]
+        print(f"Average order check: {avg_check}")
+
+# Function to show the most popular products category
+def most_popular_category():
+    with sqlite3.connect('store.db') as cucu:
+        cursor = cucu.cursor()
+        cursor.execute('''
+            SELECT category, MAX(order_count) 
+            FROM (
+                SELECT products.category, COUNT(orders.order_id) AS order_count
+                FROM orders
+                INNER JOIN products ON orders.product_id = products.product_id
+                GROUP BY products.category
+            );
+        ''')
+        result = cursor.fetchone()
+        print(f"Most popular category: {result[0]} with {result[1]} orders.")
+
+# Function to show total products in each category
+def total_products_per_category():
+    with sqlite3.connect('store.db') as cucu:
+        cursor = cucu.cursor()
+        cursor.execute('''
+            SELECT category, COUNT(product_id) AS total_products
+            FROM products
+            GROUP BY category;
+        ''')
+        results = cursor.fetchall()
+        for row in results:
+            print(f"Category: {row[0]}, total products in {row[0]}: {row[1]}")
+
+# Function to update prices in "Phones" category
+def update_phone_prices():
+    with sqlite3.connect('store.db') as cucu:
+        cursor = cucu.cursor()
+        cursor.execute('''
+            UPDATE products
+            SET price = price * 1.10
+            WHERE category = 'phones';
+        ''')
+        cucu.commit()
+        print("Prices updated in \"Phones\" category. If it even exists.")

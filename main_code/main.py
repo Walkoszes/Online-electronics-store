@@ -42,13 +42,13 @@ def main():
         elif choice == '5':
             orders_per_customer()
         elif choice == '6':
-            break
+            average_order_check()
         elif choice == '7':
-            break
+            most_popular_category()
         elif choice == '8':
-            break
+            total_products_per_category()
         elif choice == '9':
-            break
+            update_phone_prices()
         elif choice == '10':
             break
         else:
